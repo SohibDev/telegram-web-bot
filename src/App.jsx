@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getData } from "./constants/db";
 import Card from "./components/card/Card";
 import "./App.css";
@@ -10,8 +10,8 @@ const telegram = window.Telegram.WebApp;
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
-    telegram.ready()
-  })
+    telegram.ready();
+  });
 
   const onAddItem = (item) => {
     const existItems = cartItems.find((c) => c.id == item.id);
@@ -47,9 +47,19 @@ const App = () => {
   };
 
   const onCheckout = () => {
-    telegram.MainButton.text = `Sotib olish :)`
-    telegram.MainButton.show()
-  }
+    telegram.MainButton.text = `Sotib olish :)`;
+    telegram.MainButton.show();
+  };
+
+  const onSendData = useCallback(() => {
+    telegram.sendData(JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    telegram.onEvent("mainButtonClicked", onSendData);
+
+    return () => telegram.offEvent("mainButtonClicked", onSendData);
+  }, [onSendData]);
 
   return (
     <div>
