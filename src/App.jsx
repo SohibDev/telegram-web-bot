@@ -9,6 +9,11 @@ const telegram = window.Telegram.WebApp;
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
+
   useEffect(() => {
     telegram.ready();
   });
@@ -61,7 +66,9 @@ const App = () => {
         body: JSON.stringify(cartItems),
       });
     } else {
-      telegram.sendData(JSON.stringify({products: cartItems, queryID: queryID}));
+      telegram.sendData(
+        JSON.stringify({ products: cartItems, queryID: queryID })
+      );
     }
   }, [cartItems]);
 
@@ -70,6 +77,32 @@ const App = () => {
 
     return () => telegram.offEvent("mainButtonClicked", onSendData);
   }, [onSendData]);
+
+  const handlePhoneChange = (event) => {
+    setPhone(event.target.value);
+  };
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Here you can handle form submission, like sending data to a server
+    // For example, you can log the data to the console for now
+    console.log("Phone:", phone);
+    console.log("Message:", message);
+    console.log("Email:", email);
+    console.log("Selected Option:", selectedOption);
+  };
 
   return (
     <div>
@@ -87,6 +120,51 @@ const App = () => {
           </>
         ))}
       </div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="phone">Raqamingiz:</label>
+          <input
+            placeholder="Masalan: +998992745597"
+            type="tel"
+            id="phone"
+            value={phone}
+            onChange={handlePhoneChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="message">Tavsif yozing:</label>
+          <textarea
+            placeholder="Tavsifingiz..."
+            id="message"
+            value={message}
+            onChange={handleMessageChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            placeholder="Masalan: sohibjonuzoqov01@gmail.com"
+            type="email"
+            id="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="selectOption">Turlari:</label>
+          <select
+            id="selectOption"
+            value={selectedOption}
+            onChange={handleOptionChange}
+          >
+            <option className="options" value="">Ro'yxat</option>
+            <option className="options" value="option1">Medevek</option>
+            <option className="options" value="option2">Tort</option>
+            <option className="options" value="option3">Napalyon</option>
+          </select>
+        </div>
+        <button type="submit">Yuborish</button>
+      </form>
     </div>
   );
 };
