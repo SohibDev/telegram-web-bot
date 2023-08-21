@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef  } from "react";
+import emailjs from "@emailjs/browser";
 import { getData } from "./constants/db";
 import Card from "./components/card/Card";
 import "./App.css";
 import Cart from "./components/cart/Cart";
+import Swal from 'sweetalert2';
 
 const courses = getData();
 const telegram = window.Telegram.WebApp;
@@ -13,6 +15,37 @@ const App = () => {
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
+  
+
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "us0101k",
+        "template_u3u8vvt",
+        form.current,
+        "Q7LI3A550qjG-l-"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+          Swal.fire(
+            'Good job!',
+            'olga dalbayoblar !',
+            'success'
+          )
+        },
+        (error) => {
+          console.log(error.text);
+          Swal.fire(
+            'Good job!',
+          )
+        }
+      );
+  };
 
   useEffect(() => {
     telegram.ready();
@@ -78,32 +111,6 @@ const App = () => {
     return () => telegram.offEvent("mainButtonClicked", onSendData);
   }, [onSendData]);
 
-  const handlePhoneChange = (event) => {
-    setPhone(event.target.value);
-  };
-
-  const handleMessageChange = (event) => {
-    setMessage(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Here you can handle form submission, like sending data to a server
-    // For example, you can log the data to the console for now
-    console.log("Phone:", phone);
-    console.log("Message:", message);
-    console.log("Email:", email);
-    console.log("Selected Option:", selectedOption);
-  };
-
   return (
     <div>
       <h1 className="heading">Course</h1>
@@ -120,24 +127,23 @@ const App = () => {
           </>
         ))}
       </div>
-      <form onSubmit={handleSubmit}>
+      <form ref={form} onSubmit={sendEmail}>
         <div>
           <label htmlFor="phone">Raqamingiz:</label>
           <input
+            name="phone"
             placeholder="Masalan: +998992745597"
             type="tel"
             id="phone"
-            value={phone}
-            onChange={handlePhoneChange}
+            
           />
         </div>
         <div>
           <label htmlFor="message">Tavsif yozing:</label>
           <textarea
+            name="message"
             placeholder="Tavsifingiz..."
             id="message"
-            value={message}
-            onChange={handleMessageChange}
           />
         </div>
         <div>
@@ -146,24 +152,27 @@ const App = () => {
             placeholder="Masalan: sohibjonuzoqov01@gmail.com"
             type="email"
             id="email"
-            value={email}
-            onChange={handleEmailChange}
+            name="email"
           />
         </div>
         <div>
           <label htmlFor="selectOption">Turlari:</label>
-          <select
-            id="selectOption"
-            value={selectedOption}
-            onChange={handleOptionChange}
-          >
-            <option className="options" value="">Ro'yxat</option>
-            <option className="options" value="option1">Medevek</option>
-            <option className="options" value="option2">Tort</option>
-            <option className="options" value="option3">Napalyon</option>
+          <select id="selectOption" name="selectedOption">
+            <option className="options" value="">
+              Ro'yxat
+            </option>
+            <option className="options" value="option1">
+              Medevek
+            </option>
+            <option className="options" value="option2">
+              Tort
+            </option>
+            <option className="options" value="option3">
+              Napalyon
+            </option>
           </select>
         </div>
-        <button type="submit">Yuborish</button>
+        <button type="submit" value="Send" >Yuborish</button>
       </form>
     </div>
   );
