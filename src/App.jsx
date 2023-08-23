@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState, useRef  } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
 import { getData } from "./constants/db";
 import Card from "./components/card/Card";
 import "./App.css";
 import Cart from "./components/cart/Cart";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const courses = getData();
 const telegram = window.Telegram.WebApp;
@@ -15,7 +15,6 @@ const App = () => {
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
-  
 
   const form = useRef();
 
@@ -27,22 +26,21 @@ const App = () => {
         "us0101k",
         "template_u3u8vvt",
         form.current,
-        "Q7LI3A550qjG-l-"
+        "Q7LI3A550qjG-luo-"
       )
       .then(
         (result) => {
           console.log(result.text);
-          Swal.fire(
-            'Good job!',
-            'olga dalbayoblar !',
-            'success'
-          )
+          Swal.fire("Good job!", "olga dalbayoblar !", "success");
+          form.current.reset();
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         },
         (error) => {
           console.log(error.text);
-          Swal.fire(
-            'Good job!',
-          )
+          Swal.fire("Good job!");
         }
       );
   };
@@ -135,16 +133,11 @@ const App = () => {
             placeholder="Masalan: +998992745597"
             type="tel"
             id="phone"
-            
           />
         </div>
         <div>
           <label htmlFor="message">Tavsif yozing:</label>
-          <textarea
-            name="message"
-            placeholder="Tavsifingiz..."
-            id="message"
-          />
+          <textarea name="message" placeholder="Tavsifingiz..." id="message" />
         </div>
         <div>
           <label htmlFor="email">Email:</label>
@@ -155,24 +148,16 @@ const App = () => {
             name="email"
           />
         </div>
-        <div>
-          <label htmlFor="selectOption">Turlari:</label>
-          <select id="selectOption" name="selectedOption">
-            <option className="options" value="">
-              Ro'yxat
-            </option>
-            <option className="options" value="option1">
-              Medevek
-            </option>
-            <option className="options" value="option2">
-              Tort
-            </option>
-            <option className="options" value="option3">
-              Napalyon
-            </option>
-          </select>
-        </div>
-        <button type="submit" value="Send" >Yuborish</button>
+        <label htmlFor="selectOption">Turlari:</label>
+        <select name="selectedOption">
+          <option>Ro'yxat</option>
+          <option>Medevek</option>
+          <option>Tort</option>
+          <option>Napalyon</option>
+        </select>
+        <button type="submit" value="Send">
+          Yuborish
+        </button>
       </form>
     </div>
   );

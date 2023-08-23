@@ -1,3 +1,7 @@
+body {
+  background: url();
+}
+
 .heading {
   text-align: center;
 }
@@ -59,6 +63,7 @@ form {
   background-color: #70db28b5;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  margin: 30px auto 100px;
 }
 
 label {
